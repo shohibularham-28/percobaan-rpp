@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Penyusun ATP, RPM &amp; LKPD</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#16243a;--mut:#5b6b80;--bg:#eef2f5;--card:#fff;--line:#d3dce5;--teal:#0e6e68;--gold:#f0a800;--err:#b3261e}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 'Source Sans 3',system-ui,sans-serif}
+h1,h2,h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;margin:0 0 .5rem;line-height:1.15}
+header{background:var(--ink);color:#fff;padding:1.2rem 1.25rem}
+header h1{font-size:1.5rem;font-weight:800}
+header p{margin:.25rem 0 0;color:#b9c6d6;font-size:.95rem}
+main{max-width:1100px;margin:0 auto;padding:1rem}
+.steps{display:flex;gap:.5rem;margin:.5rem 0 1rem;flex-wrap:wrap}
+.steps button{flex:1;min-width:130px;padding:.7rem 1rem;border:2px solid var(--line);background:#fff;border-radius:8px;font:600 1rem 'Source Sans 3',sans-serif;color:var(--mut);cursor:pointer;text-align:left}
+.steps button.on{border-color:var(--teal);color:var(--teal);box-shadow:inset 0 -4px 0 var(--gold)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1.1rem;margin-bottom:1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.75rem}
+label{display:block;font-size:.85rem;font-weight:600;color:var(--mut);margin-bottom:.2rem}
+input,select,textarea{width:100%;padding:.5rem .6rem;border:1px solid var(--line);border-radius:6px;font:inherit;color:var(--ink);background:#fff}
+textarea{min-height:90px;resize:vertical}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid #f0a80088;outline-offset:1px}
+.btn{background:var(--teal);color:#fff;border:0;border-radius:8px;padding:.65rem 1.1rem;font:600 1rem 'Source Sans 3',sans-serif;cursor:pointer}
+.btn.alt{background:#fff;color:var(--teal);border:2px solid var(--teal)}
+.btn.sm{padding:.35rem .7rem;font-size:.9rem}
+.btn:disabled{opacity:.5;cursor:wait}
+.row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:.8rem}
+.msg{font-size:.92rem;margin-top:.6rem}.msg.err{color:var(--err)}.msg.ok{color:var(--teal)}
+.tw{overflow-x:auto}
+table.atp{border-collapse:collapse;width:100%;min-width:900px;font-size:.92rem}
+.atp th{background:var(--ink);color:#fff;text-align:left;padding:.45rem;font-weight:600}
+.atp td{border:1px solid var(--line);padding:.25rem;vertical-align:top}
+.atp textarea{min-height:70px;border:0;padding:.3rem}.atp input[type=text],.atp input[type=number]{border:0}
+.doc{background:#fff;border:1px solid var(--line);border-radius:8px;padding:1.4rem;min-height:200px;font-size:.97rem}
+.doc table{border-collapse:collapse;width:100%;margin:.6rem 0}
+.doc th,.doc td{border:1px solid #9aa8b8;padding:.4rem .5rem;text-align:left;vertical-align:top}
+.doc th{background:#e4ebf1}
+.doc h2{font-size:1.25rem}.doc h3{font-size:1.05rem;margin-top:1rem}
+.note{color:var(--mut);font-size:.9rem}
+@media print{header,.steps,.card,.noprint{display:none!important}main{padding:0}.doc{border:0;padding:0}.pane{display:block!important}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Penyusun ATP, RPM &amp; LKPD</h1>
+  <p>Susun ATP, kembangkan menjadi Rencana Pembelajaran Mendalam, lalu buat LKPD yang selaras.</p>
+</header>
+<main>
+<div class="card">
+  <h3>Pengaturan Gemini</h3>
+  <div class="grid">
+    <div><label for="key">API Key Google Gemini</label><input id="key" type="password" placeholder="AIza..." autocomplete="off"></div>
+    <div><label for="model">Nama model</label><input id="model" type="text" value="gemini-3.8-flash"></div>
+  </div>
+  <p class="note">Kunci disimpan hanya di peramban Anda dan dikirim langsung ke Google. Jika nama model berbeda di akun Anda, ubah kolom di atas sesuai Google AI Studio.</p>
+</div>
+
+<nav class="steps">
+  <button class="on" data-p="p1">1. Susun ATP</button>
+  <button data-p="p2">2. Rencana Pembelajaran Mendalam</button>
+  <button data-p="p3">3. LKPD</button>
+</nav>
+
+<section id="p1" class="pane">
+  <div class="card">
+    <div class="grid">
+      <div><label>Satuan pendidikan</label><input id="sekolah" type="text"></div>
+      <div><label>Nama guru</label><input id="guru" type="text"></div>
+      <div><label>Mata pelajaran</label><input id="mapel" type="text" placeholder="Contoh: IPAS"></div>
+      <div><label>Fase</label><select id="fase"><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select></div>
+      <div><label>Kelas</label><input id="kelas" type="text" placeholder="Contoh: VII"></div>
+      <div><label>Semester</label><select id="smt"><option>Ganjil</option><option>Genap</option></select></div>
+      <div><label>Alokasi JP per semester</label><input id="jp" type="number" min="1" value="36"></div>
+    </div>
+    <div style="margin-top:.75rem"><label>Capaian Pembelajaran (CP) dan elemen/materi</label>
+      <textarea id="cp" placeholder="Tempel CP fase dan elemen/materi yang akan dicakup."></textarea></div>
+    <div class="row"><button class="btn" id="bAtp">Susun ATP dengan AI</button><span id="mAtp" class="msg"></span></div>
+  </div>
+  <div class="card">
+    <h3>Alur Tujuan Pembelajaran</h3>
+    <p class="note">Semua sel dapat diedit. Centang baris yang akan dipakai di langkah 2.</p>
+    <div class="tw"><table class="atp"><thead><tr><th>Pakai</th><th>Tujuan Pembelajaran</th><th>Materi</th><th>Dimensi Profil Lulusan</th><th>JP</th><th>Asesmen</th><th></th></tr></thead><tbody id="atpBody"></tbody></table></div>
+    <div class="row"><button class="btn alt sm" id="addRow">Tambah baris</button><button class="btn alt sm" id="dlAtp">Unduh ATP (Word)</button><button class="btn sm" id="toRpm">Lanjut ke RPM</button></div>
+  </div>
+</section>
+
+<section id="p2" class="pane" hidden>
+  <div class="card">
+    <h3>Rancang RPM dari ATP terpilih</h3>
+    <div class="grid">
+      <div><label>Jumlah pertemuan</label><input id="pert" type="number" min="1" value="2"></div>
+      <div><label>Durasi per pertemuan (menit)</label><input id="dur" type="number" min="10" value="80"></div>
+      <div><label>Praktik pedagogis</label><select id="ped"><option>Pembelajaran Berbasis Proyek (PjBL)</option><option>Pembelajaran Berbasis Masalah (PBL)</option><option>Inkuiri-Penemuan</option><option>Diskusi Kolaboratif</option><option>Pembelajaran Berdiferensiasi</option></select></div>
+    </div>
+    <div style="margin-top:.75rem"><label>Catatan khusus (opsional)</label><textarea id="catR" style="min-height:60px" placeholder="Karakteristik siswa, sarana, konteks lokal..."></textarea></div>
+    <p id="sel" class="note"></p>
+    <div class="row"><button class="btn" id="bRpm">Susun RPM dengan AI</button><span id="mRpm" class="msg"></span></div>
+  </div>
+  <div class="card">
+    <div class="doc" id="rpm" contenteditable="true">RPM akan tampil di sini dan dapat diedit langsung.</div>
+    <div class="row noprint"><button class="btn alt sm" data-print="rpm">Cetak / PDF</button><button class="btn alt sm" data-dl="rpm">Unduh Word</button><button class="btn sm" id="toLkpd">Lanjut ke LKPD</button></div>
+  </div>
+</section>
+
+<section id="p3" class="pane" hidden>
+  <div class="card">
+    <h3>LKPD sesuai RPM</h3>
+    <div class="grid">
+      <div><label>Bentuk LKPD</label><select id="bent"><option>Satu LKPD untuk seluruh pertemuan</option><option>Satu LKPD per pertemuan</option></select></div>
+      <div><label>Pengerjaan</label><select id="kerja"><option>Kelompok</option><option>Individu</option></select></div>
+    </div>
+    <div class="row"><button class="btn" id="bLkpd">Buat LKPD dari RPM</button><span id="mLkpd" class="msg"></span></div>
+  </div>
+  <div class="card">
+    <div class="doc" id="lkpd" contenteditable="true">LKPD akan tampil di sini dan dapat diedit langsung.</div>
+    <div class="row noprint"><button class="btn alt sm" data-print="lkpd">Cetak / PDF</button><button class="btn alt sm" data-dl="lkpd">Unduh Word</button></div>
+  </div>
+</section>
+</main>
+
+<script>
+const $=s=>document.querySelector(s);
+let atp=[];
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+$('#key').value=store.get('gk')||'';$('#model').value=store.get('gm')||'gemini-3.8-flash';
+['key','model'].forEach(i=>$('#'+i).addEventListener('change',()=>{store.set(i==='key'?'gk':'gm',$('#'+i).value.trim())}));
+
+document.querySelectorAll('.steps button').forEach(b=>b.onclick=()=>go(b.dataset.p));
+function go(p){document.querySelectorAll('.pane').forEach(e=>e.hidden=e.id!==p);document.querySelectorAll('.steps button').forEach(b=>b.classList.toggle('on',b.dataset.p===p));if(p==='p2')updSel();scrollTo(0,0)}
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+async function gem(prompt,json){
+  const key=$('#key').value.trim(),model=$('#model').value.trim();
+  if(!key)throw new Error('Isi API Key Gemini terlebih dahulu.');
+  const body={contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:.6}};
+  if(json)body.generationConfig.responseMimeType='application/json';
+  const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(model)+':generateContent',{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify(body)});
+  const d=await r.json();
+  if(!r.ok)throw new Error(d.error?.message||('Permintaan gagal ('+r.status+')'));
+  const t=(d.candidates?.[0]?.content?.parts||[]).map(p=>p.text||'').join('');
+  if(!t)throw new Error('Gemini tidak mengembalikan teks. Coba lagi.');
+  return t;
+}
+const clean=h=>h.replace(/```(?:html|json)?/gi,'').replace(/```/g,'').replace(/<script[\s\S]*?<\/script>/gi,'').trim();
+async function run(btn,msg,fn){
+  btn.disabled=true;msg.className='msg';msg.textContent='Memproses, mohon tunggu...';
+  try{await fn();msg.className='msg ok';msg.textContent='Selesai.'}
+  catch(e){msg.className='msg err';msg.textContent=e.message}
+  btn.disabled=false;
+}
+
+/* ===== ATP ===== */
+function renderAtp(){
+  $('#atpBody').innerHTML=atp.map((r,i)=>`<tr>
+  <td style="text-align:center"><input type="checkbox" data-i="${i}" data-f="on" ${r.on?'checked':''} aria-label="Pakai baris ${i+1}"></td>
+  <td><textarea data-i="${i}" data-f="tp">${esc(r.tp)}</textarea></td>
+  <td><textarea data-i="${i}" data-f="materi">${esc(r.materi)}</textarea></td>
+  <td><textarea data-i="${i}" data-f="profil">${esc(r.profil)}</textarea></td>
+  <td style="width:70px"><input type="number" data-i="${i}" data-f="jp" value="${esc(r.jp)}"></td>
+  <td><textarea data-i="${i}" data-f="asesmen">${esc(r.asesmen)}</textarea></td>
+  <td><button class="btn alt sm" data-del="${i}" aria-label="Hapus baris">Hapus</button></td></tr>`).join('');
+}
+$('#atpBody').addEventListener('input',e=>{const t=e.target,i=t.dataset.i;if(i==null)return;atp[i][t.dataset.f]=t.type==='checkbox'?t.checked:t.value});
+$('#atpBody').addEventListener('click',e=>{const d=e.target.dataset.del;if(d!=null){atp.splice(+d,1);renderAtp()}});
+$('#addRow').onclick=()=>{atp.push({on:true,tp:'',materi:'',profil:'',jp:2,asesmen:''});renderAtp()};
+const ident=()=>`Satuan pendidikan: ${$('#sekolah').value||'-'}; Guru: ${$('#guru').value||'-'}; Mapel: ${$('#mapel').value}; Fase ${$('#fase').value}, Kelas ${$('#kelas').value}, Semester ${$('#smt').value}.`;
+
+$('#bAtp').onclick=()=>run($('#bAtp'),$('#mAtp'),async()=>{
+  if(!$('#cp').value.trim())throw new Error('Isi CP dan elemen/materi terlebih dahulu.');
+  const p=`Anda perancang kurikulum Indonesia (Kurikulum Merdeka, pembelajaran mendalam). Susun Alur Tujuan Pembelajaran (ATP) berurutan dari konsep dasar ke kompleks.
+${ident()} Total alokasi: ${$('#jp').value} JP.
+CP dan materi:
+${$('#cp').value}
+Kembalikan HANYA array JSON; tiap objek berisi kunci: "tp" (tujuan pembelajaran dengan kompetensi + lingkup materi, kata kerja operasional), "materi", "profil" (pilih dari 8 dimensi Profil Lulusan: Keimanan dan Ketakwaan terhadap Tuhan YME, Kewargaan, Penalaran Kritis, Kreativitas, Kolaborasi, Kemandirian, Kesehatan, Komunikasi), "jp" (angka; jumlah seluruhnya sama dengan total JP), "asesmen" (teknik asesmen singkat).`;
+  const arr=JSON.parse(clean(await gem(p,true)));
+  atp=arr.map(r=>({on:true,tp:r.tp,materi:r.materi,profil:Array.isArray(r.profil)?r.profil.join(', '):r.profil,jp:r.jp,asesmen:r.asesmen}));
+  renderAtp();
+});
+$('#dlAtp').onclick=()=>{
+  const rows=atp.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.tp)}</td><td>${esc(r.materi)}</td><td>${esc(r.profil)}</td><td>${esc(r.jp)}</td><td>${esc(r.asesmen)}</td></tr>`).join('');
+  word(`<h2>Alur Tujuan Pembelajaran</h2><p>${esc(ident())}</p><table border="1" cellspacing="0" cellpadding="4"><tr><th>No</th><th>Tujuan Pembelajaran</th><th>Materi</th><th>Dimensi Profil Lulusan</th><th>JP</th><th>Asesmen</th></tr>${rows}</table>`,'ATP');
+};
+$('#toRpm').onclick=()=>go('p2');
+const chosen=()=>atp.filter(r=>r.on&&r.tp);
+function updSel(){$('#sel').textContent=chosen().length?chosen().length+' tujuan pembelajaran dipilih dari ATP.':'Belum ada TP terpilih. Kembali ke langkah 1.'}
+
+/* ===== RPM ===== */
+$('#bRpm').onclick=()=>run($('#bRpm'),$('#mRpm'),async()=>{
+  const c=chosen();if(!c.length)throw new Error('Pilih minimal satu TP di langkah 1.');
+  const list=c.map((r,i)=>`${i+1}. TP: ${r.tp} | Materi: ${r.materi} | Profil: ${r.profil} | Asesmen: ${r.asesmen}`).join('\n');
+  const p=`Anda ahli pembelajaran mendalam (deep learning) Kurikulum Merdeka. Susun Rencana Pembelajaran Mendalam (RPM) lengkap dalam bahasa Indonesia, berdasarkan ATP berikut.
+${ident()}
+${list}
+Jumlah pertemuan: ${$('#pert').value}, @${$('#dur').value} menit. Praktik pedagogis: ${$('#ped').value}. Catatan: ${$('#catR').value||'-'}
+Struktur wajib (gunakan <h2>, <h3>, <table>, <ul>, <ol>):
+1. Identitas (tabel: sekolah, guru, mapel, fase/kelas, semester, alokasi waktu, topik).
+2. Identifikasi: peserta didik (pengetahuan awal, minat, kebutuhan belajar), materi pelajaran, dimensi profil lulusan yang dikuatkan.
+3. Desain Pembelajaran: capaian pembelajaran, lintas disiplin ilmu, tujuan pembelajaran, topik, praktik pedagogis, kemitraan pembelajaran, lingkungan pembelajaran, pemanfaatan digital.
+4. Pengalaman Belajar per pertemuan: Awal (berkesadaran, bermakna, menggembirakan), Inti dengan tahap Memahami, Mengaplikasi, Merefleksi (rinci aktivitas guru dan siswa, beri estimasi menit), Penutup.
+5. Asesmen: awal (diagnostik), proses (formatif), akhir (sumatif), disertai rubrik singkat dalam tabel.
+Kembalikan HANYA fragmen HTML, tanpa <html>, <body>, atau blok kode.`;
+  $('#rpm').innerHTML=clean(await gem(p,false));
+});
+$('#toLkpd').onclick=()=>go('p3');
+
+/* ===== LKPD ===== */
+$('#bLkpd').onclick=()=>run($('#bLkpd'),$('#mLkpd'),async()=>{
+  const t=$('#rpm').innerText.trim();
+  if(t.length<200)throw new Error('Susun RPM terlebih dahulu di langkah 2.');
+  const p=`Berdasarkan RPM berikut, buat LKPD (Lembar Kerja Peserta Didik) yang selaras dengan tujuan pembelajaran, praktik pedagogis, dan alur Memahami-Mengaplikasi-Merefleksi di RPM. Bentuk: ${$('#bent').value}. Pengerjaan: ${$('#kerja').value}.
+Isi tiap LKPD (HTML dengan <h2>, <h3>, <table>, <ol>): identitas (nama, kelas, tanggal, kelompok); tujuan pembelajaran; petunjuk belajar; bahan/alat; kegiatan 1 Memahami (stimulus + pertanyaan pemantik); kegiatan 2 Mengaplikasi (langkah kerja/proyek dengan tabel isian); kegiatan 3 Merefleksi (pertanyaan refleksi dan penilaian diri); rubrik penilaian; kolom komentar guru. Sediakan ruang isian (tabel kosong atau garis titik-titik). Bahasa ramah siswa.
+RPM:
+${t.slice(0,14000)}
+Kembalikan HANYA fragmen HTML, tanpa blok kode.`;
+  $('#lkpd').innerHTML=clean(await gem(p,false));
+});
+
+/* ===== Ekspor ===== */
+function word(html,name){
+  const doc='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><style>body{font-family:Calibri,sans-serif}table{border-collapse:collapse}td,th{border:1px solid #444;padding:4px;vertical-align:top}</style></head><body>'+html+'</body></html>';
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff',doc],{type:'application/msword'}));a.download=name+'.doc';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+document.querySelectorAll('[data-dl]').forEach(b=>b.onclick=()=>word($('#'+b.dataset.dl).innerHTML,b.dataset.dl.toUpperCase()));
+document.querySelectorAll('[data-print]').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.doc').forEach(d=>d.style.display=d.id===b.dataset.print?'block':'none');
+  print();document.querySelectorAll('.doc').forEach(d=>d.style.display='');
+});
+
+/* ===== Simpan otomatis & pulihkan saat reload ===== */
+const KEY='atp-rpm-lkpd-v1';
+let pane='p1';
+const fields=()=>[...document.querySelectorAll('input[id],select[id],textarea[id]')];
+let noSave=false;
+function save(){
+  if(noSave)return;
+  try{
+    const f={};fields().forEach(e=>f[e.id]=e.value);
+    localStorage.setItem(KEY,JSON.stringify({f,atp,rpm:$('#rpm').innerHTML,lkpd:$('#lkpd').innerHTML,pane}));
+  }catch(e){}
+}
+let tmr;const later=()=>{clearTimeout(tmr);tmr=setTimeout(save,300)};
+['input','change','click'].forEach(t=>document.addEventListener(t,later));
+addEventListener('beforeunload',save);
+addEventListener('pagehide',save);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)save()});
+
+const _go=go;go=function(p){pane=p;_go(p);save()};
+const _run=run;run=async function(b,m,fn){await _run(b,m,fn);save()};
+
+(function restore(){
+  try{
+    const raw=localStorage.getItem(KEY);if(!raw)return;
+    const d=JSON.parse(raw);
+    Object.entries(d.f||{}).forEach(([id,v])=>{const e=document.getElementById(id);if(e)e.value=v});
+    if(Array.isArray(d.atp)){atp=d.atp;renderAtp()}
+    if(d.rpm)$('#rpm').innerHTML=d.rpm;
+    if(d.lkpd)$('#lkpd').innerHTML=d.lkpd;
+    if(d.pane&&d.pane!=='p1')_go(d.pane);
+    $('#key').dispatchEvent(new Event('change'));$('#model').dispatchEvent(new Event('change'));
+  }catch(e){}
+})();
+
+(function(){
+  const b=document.createElement('button');
+  b.className='btn alt sm';b.style.marginTop='.5rem';b.textContent='Hapus semua data tersimpan';
+  b.onclick=()=>{if(confirm('Hapus semua ATP, RPM, LKPD, dan isian yang tersimpan di peramban ini?')){noSave=true;try{localStorage.removeItem(KEY)}catch(e){}location.reload()}};
+  document.querySelector('.card .note').after(b);
+})();
+</script>
+</body>
+</html>
